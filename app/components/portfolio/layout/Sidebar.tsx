@@ -7,7 +7,7 @@ export default function Sidebar() {
             <div class="brand">
               <div class="avatar">
                 <img 
-    src="/portfolio/Abdul_Jalil_Tamjid.jpg" 
+    src="/Abdul_Jalil_Tamjid.jpg" 
     alt="Abdul Jalil Tamjid" 
     style="width:100%; height:100%; object-fit:cover; border-radius:50%;"
   />
