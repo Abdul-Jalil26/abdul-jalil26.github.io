@@ -332,7 +332,9 @@ export default function ChatWidget() {
       <div className={`chat-window${isOpen ? ' open' : ''}`} role="dialog" aria-label="Portfolio assistant">
         <div className="chat-header">
           <div className="chat-header-info">
-            <div className="chat-avatar"></div>
+            <div className="chat-avatar">
+              <img src="/jalil2.jpeg" alt="Abdul Jalil Tamjid" />
+            </div>
             <div>
               <div className="chat-title">Ask Tamjid</div>
               <div className="chat-status">
