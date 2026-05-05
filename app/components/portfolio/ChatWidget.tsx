@@ -45,55 +45,88 @@ const PROFILE = {
   },
   projects: [
     {
-      name: 'Loom',
-      aliases: ['loom'],
+      name: 'AI Powered Medical Education Platform',
+      aliases: ['ai powered medical education platform', 'ai-lms', 'medical education platform'],
+      year: 2026,
+      status: 'Production',
+      tagline: 'AI-assisted medical learning platform',
+      description: 'A production medical education platform with an AI-driven experience for learners and instructors.',
+      impact: 'Deployed publicly at ai-lms.eatlbd.com.',
+      stack: ['LLM', 'CUDA', 'Python'],
+      links: { Source: 'https://ai-lms.eatlbd.com/', 'Live demo': 'https://ai-lms.eatlbd.com/' },
+    },
+    {
+      name: 'Basic LLM Agent',
+      aliases: ['basic llm agent', 'llm agent'],
       year: 2025,
       status: 'Production',
-      tagline: 'LLM Serving Runtime',
-      description: 'A multi-tenant scheduler for serving large language models at sub-100ms p99 latency.',
-      impact: 'Cut serving costs by 38% across two production clusters.',
-      stack: ['Rust', 'CUDA', 'Triton', 'Kubernetes'],
-      links: { GitHub: '#', Demo: '#', Paper: '#' },
+      tagline: 'Practical LLM assistant',
+      description: 'A basic LLM agent built as a production project and demonstrated with an external live endpoint.',
+      impact: 'Published on GitHub with a live demo link.',
+      stack: ['LLM', 'CUDA', 'Python'],
+      links: { GitHub: 'https://github.com/Abdul-Jalil26/Basic-LLM-Agent', 'Live demo': '#' },
     },
     {
-      name: 'Sift',
-      aliases: ['sift'],
+      name: 'Inventory Management System',
+      aliases: ['inventory management system', 'inventory'],
       year: 2024,
       status: 'Open Source',
-      tagline: 'Typed Query Engine',
-      description: 'Vectorised execution layer over Apache Arrow.',
-      impact: 'Started as an internal tool; now used by ~60 teams across two companies.',
+      tagline: 'Inventory tracking workflow',
+      description: 'A Django-based inventory management system built to track and manage stock workflows.',
+      impact: 'Shared publicly as an open-source repository.',
       stack: ['Rust', 'Arrow', 'SQL'],
-      links: { GitHub: '#', Docs: '#' },
+      links: { GitHub: 'https://github.com/Abdul-Jalil26/django_app', Docs: '#' },
     },
     {
-      name: 'Vellum',
-      aliases: ['vellum'],
+      name: 'Vector Embeddings Project',
+      aliases: ['vector embeddings project', 'vector embeddings', 'embedding project'],
       year: 2023,
       status: 'Open Source',
-      tagline: 'Reproducible Notebooks',
-      description: 'Lightweight environment that pins data, code, and stochastic state in a single artifact.',
-      impact: '4.2k stars on GitHub; used in two NeurIPS workshops.',
+      tagline: 'Vector embedding tools',
+      description: 'A Python and TypeScript project around vector embeddings and reusable model workflows.',
+      impact: 'Released on GitHub for public use.',
       stack: ['Python', 'TypeScript', 'Docker'],
-      links: { GitHub: '#', 'Try it': '#' },
+      links: { GitHub: 'https://github.com/Abdul-Jalil26/Vector_Embedding', 'Try it': '#' },
+    },
+    {
+      name: 'Responsive Travel Website',
+      aliases: ['responsive travel website', 'travel website'],
+      year: 2021,
+      status: 'Course Project',
+      tagline: 'Responsive travel experience',
+      description: 'A mobile-friendly travel website built as a course project and deployed for conservation-related work.',
+      impact: 'Used across multiple conservation projects.',
+      stack: ['React Native', 'SQLite'],
+      links: { GitHub: 'https://github.com/Abdul-Jalil26/Responsive_Travel_Website_Desing', 'Project page': '#' },
+    },
+    {
+      name: 'On-Campus Job Management System',
+      aliases: ['on-campus job management system', 'job management system'],
+      year: 2022,
+      status: 'Course Project',
+      tagline: 'Campus job postings and applications',
+      description: 'A web-based application for managing job postings and applications for students and employers on campus.',
+      impact: 'Published as a course project repository.',
+      stack: ['Python', 'Django'],
+      links: { GitHub: 'https://github.com/Abdul-Jalil26/On-Campus-Job-Management-System', Paper: '#' },
     },
   ] as Project[],
   experience: [
     {
-      company: 'AnthemicLabs',
-      aliases: ['anthemic'],
-      role: 'Senior Machine Learning Engineer',
-      period: 'Jan 2024 - Present',
-      description: "Lead engineer on the model-serving platform powering the company's flagship LLM API.",
-      achievements: ['Cut p99 latency by 38%', 'Halved per-token serving cost'],
+      company: 'Mawlana Bhashani Science and Technology University',
+      aliases: ['mbstu', 'mawlana bhashani science and technology university'],
+      role: 'Research Assistant',
+      period: 'May 2024 - Aug 2025',
+      description: 'Worked on retrieval-augmented generation and evaluation methods for long-context models.',
+      achievements: ['Shipped a grounded-QA dataset adopted by three university courses', 'First author on three peer-reviewed papers'],
     },
     {
-      company: 'TechCo Research',
-      aliases: ['techco'],
-      role: 'Research Scientist (NLP)',
-      period: 'Aug 2022 - Dec 2023',
-      description: 'Worked on retrieval-augmented generation and evaluation methods for long-context models.',
-      achievements: ['First author on 3 peer-reviewed papers'],
+      company: 'Ethics Advance Technology Limited',
+      aliases: ['ethics advance technology limited', 'eatl'],
+      role: 'AI/ML Engineer',
+      period: 'Aug 2025 - Ongoing',
+      description: 'Built a real-time fraud-detection backend and helped migrate a legacy stack into a smaller typed service set.',
+      achievements: ['Built the real-time fraud-detection backend serving 11M+ users', 'Migrated a 14-service legacy stack to four well-typed services'],
     },
   ] as Experience[],
 };
@@ -130,7 +163,8 @@ function detectCompany(q: string): Experience | null {
 function detectTechnology(q: string): string | null {
   const allTechs = [...PROFILE.skills.primaryLangs, ...PROFILE.skills.otherLangs, ...PROFILE.skills.ml, ...PROFILE.skills.infra];
   for (const tech of allTechs) {
-    if (new RegExp(`\\b${tech.toLowerCase().replace(/\\+/g, '\\\\+')}\\b`, 'i').test(q)) return tech;
+    const escaped = tech.toLowerCase().replace(/([.*+?^${}()|[\]\\])/g, '\\$1');
+    if (new RegExp(`\b${escaped}\b`, 'i').test(q)) return tech;
   }
   for (const [alias, real] of Object.entries(TECH_ALIASES)) {
     if (new RegExp(`\\b${alias}\\b`, 'i').test(q)) {
@@ -180,12 +214,13 @@ function getDemoResponse(input: string): string {
     return `Reach me at <a href='mailto:${PROFILE.contact.email}'><strong>${PROFILE.contact.email}</strong></a> or ${PROFILE.contact.phone}.`;
   }
 
-  return `I do not have a precise answer for that yet. Ask me about <em>projects</em> (Loom, Sift, Vellum), <em>experience</em>, <em>skills</em>, or <em>contact</em>.`;
+  return `I do not have a precise answer for that yet. Ask me about <em>projects</em> (AI Powered Medical Education Platform, Basic LLM Agent, Inventory Management System), <em>experience</em>, <em>skills</em>, or <em>contact</em>.`;
 }
 
 async function callApi(history: { role: ChatRole; content: string }[]): Promise<string> {
   if (!OPENROUTER_API_KEY) {
-    throw new Error('OpenRouter API key not configured. Set NEXT_PUBLIC_OPENROUTER_API_KEY in the GitHub Actions build step.');
+    const latestUserMessage = [...history].reverse().find((turn) => turn.role === 'user')?.content ?? '';
+    return getDemoResponse(latestUserMessage);
   }
 
   const portfolioContext = `You are a concise portfolio assistant for Abdul Jalil Tamjid. Use first-person voice and only discuss verified profile facts.
@@ -285,31 +320,19 @@ export default function ChatWidget() {
     setShowSuggestions(false);
     setIsTyping(true);
 
-    try {
-      let reply = '';
-      if (USE_API) {
-        try {
-          reply = await callApi(historyRef.current);
-        } catch {
-          reply = getDemoResponse(trimmed);
-        }
-      } else {
-        reply = getDemoResponse(trimmed);
-      }
+    let reply = getDemoResponse(trimmed);
 
-      setMessages((prev) => [...prev, { who: 'bot', html: reply }]);
-      historyRef.current.push({ role: 'assistant', content: reply });
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          who: 'bot',
-          html: `Sorry - something went wrong. Email <a href='mailto:${PROFILE.contact.email}'>${PROFILE.contact.email}</a>.`,
-        },
-      ]);
-    } finally {
-      setIsTyping(false);
+    if (USE_API) {
+      try {
+        reply = await callApi(historyRef.current);
+      } catch (error) {
+        console.error('OpenRouter request failed, using local fallback instead.', error);
+      }
     }
+
+    setMessages((prev) => [...prev, { who: 'bot', html: reply }]);
+    historyRef.current.push({ role: 'assistant', content: reply });
+    setIsTyping(false);
   }
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
