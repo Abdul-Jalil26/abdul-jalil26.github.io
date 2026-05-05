@@ -27,7 +27,9 @@ type Experience = {
 };
 
 const USE_API = true;
-const API_URL = '/api/chat';
+// OpenRouter API key (safe to expose - designed for frontend use)
+const OPENROUTER_API_KEY = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY ?? '';
+const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 const PROFILE = {
   name: 'Abdul Jalil Tamjid',
@@ -182,17 +184,63 @@ function getDemoResponse(input: string): string {
 }
 
 async function callApi(history: { role: ChatRole; content: string }[]): Promise<string> {
-  const res = await fetch(API_URL, {
+  if (!OPENROUTER_API_KEY) {
+    throw new Error('OpenRouter API key not configured. Set NEXT_PUBLIC_OPENROUTER_API_KEY in the GitHub Actions build step.');
+  }
+
+  const portfolioContext = `You are a concise portfolio assistant for Abdul Jalil Tamjid. Use first-person voice and only discuss verified profile facts.
+
+Name: Abdul Jalil Tamjid
+Role: Software Engineer & ML Researcher
+Location: Nikunjo-2, Dhaka, Bangladesh
+Email: ajtamjid@gmail.com
+Phone: +880 1700 000 000
+
+Projects:
+- AI Powered Medical Education Platform (2026): AI-assisted medical learning platform. Live at ai-lms.eatlbd.com. Stack: LLM, CUDA, Python
+- Basic LLM Agent (2025): Practical LLM assistant. GitHub: Abdul-Jalil26/Basic-LLM-Agent. Stack: LLM, CUDA, Python
+- Inventory Management System (2024): Django-based inventory management system. GitHub: Abdul-Jalil26/django_app. Stack: Rust, Arrow, SQL
+- Vector Embeddings Project (2023): Vector embedding tools. GitHub: Abdul-Jalil26/Vector_Embedding. Stack: Python, TypeScript, Docker
+- Responsive Travel Website (2021): Mobile-friendly travel website. GitHub: Abdul-Jalil26/Responsive_Travel_Website_Desing. Stack: React Native, SQLite
+- On-Campus Job Management System (2022): Campus job postings and applications. GitHub: Abdul-Jalil26/On-Campus-Job-Management-System. Stack: Python, Django
+
+Experience:
+- Mawlana Bhashani Science and Technology University (May 2024 - Aug 2025): Research Assistant
+- Ethics Advance Technology Limited (Aug 2025 - Ongoing): AI/ML Engineer
+
+Skills: Python, TypeScript, Rust, Go, C++, Docker, Kubernetes, AWS, GCP, Postgres, Redis, PyTorch, JAX, HuggingFace`;
+
+  const messages = [
+    {
+      role: 'system',
+      content: portfolioContext,
+    },
+    ...history.slice(-12),
+  ];
+
+  const res = await fetch(OPENROUTER_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+      'HTTP-Referer': window.location.origin,
+      'X-Title': 'Portfolio Chat',
     },
-    body: JSON.stringify({ history }),
+    body: JSON.stringify({
+      model: 'openai/gpt-4-turbo',
+      messages,
+      temperature: 0.6,
+      max_tokens: 600,
+    }),
   });
 
-  if (!res.ok) throw new Error(`API ${res.status}`);
-  const data = (await res.json()) as { reply?: string };
-  const reply = data.reply;
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(`OpenRouter error ${res.status}: ${error}`);
+  }
+
+  const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
+  const reply = data.choices?.[0]?.message?.content?.trim();
   if (!reply) throw new Error('Empty response from API');
   return reply;
 }
