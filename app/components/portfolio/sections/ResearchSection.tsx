@@ -81,10 +81,10 @@ export default function ResearchSection() {
               <span className="self">Monir Hossain</span>, Abdul Jalil Tamjid, Mohammad Motiur Rahman ...
             </p>
             <div className="pub-links">
-              <a href="#">PDF</a>
-              <a href="#">arXiv</a>
-              <a href="#">Slides</a>
-              <a href="#">Talk</a>
+              <a href="https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=Performance+Comparison+of+Spatial+Filters+for+Denoising+Rayleigh%2C+Rician%2C+and+Gamma+Noise+Models+in+Ultrasound+Images&btnG=">Link</a>
+              <a href="https://www.researchgate.net/profile/Abdul-Tamjid">arXiv</a>
+              <a href="https://doi.org/10.1109/ICCIT68739.2025.11491192">DOI</a>
+            
             </div>
           </div>
         </article>
